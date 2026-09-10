@@ -86,9 +86,31 @@ def add_data():
          print('[X] Input tidak boleh kosong!')
          return
 
+    new_employee ={
+        'Employee ID': employee_id,
+        'Employee Name': employee_name,
+        'Department': department,
+        'Position': position,
+        'Salary': salary,
+        'Years Employed': years_employed,
+        'Employment Status': employment_status,
+        'Age': age,
+        'Gender': gender
+    }
+    data.append(new_employee)
+    print(f"\n[V] Employee '{employee_name}' has successfully been added with the ID: {new_employee['employee_id']}!")
 
-def read():
-    return
+
+def view_data():
+    print('\n== EMPLOYEE DATA ==')
+    if not data:
+        print
+        return
+
+    print(f"{'Employee ID':<5} |  {'Name':<30}  |  {'Department':<20}  |  {'Position':<20}  |  {'Salary':<20}  |  {'Years Employed':<20}  |  {'Employment Status':<20}  |  {'Age':<20}  |  {'Gender':<20}")
+    print('-'*70)
+    for employee in data:
+        print(f"{employee['employee_id']:<5} |  {employee['employee_name']:<30}  |  {employee['department']:<20}  |  {employee['position']:<20}  |  {employee['salary']:<20}  |  {employee['years_employed']:<20}  |  {employee['employment_status']:<20}  |  {employee['age']:<20}  |  {employee['gender']:<20}")
 
 def update():
     """Function for update the data
