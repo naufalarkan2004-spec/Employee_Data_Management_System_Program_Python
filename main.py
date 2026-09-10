@@ -69,8 +69,18 @@ data = [
 
 # Additional Features
 
+# ID Generator
+def generate_emp_id():
+    next_counter = len(data) + 1
+    
+    # Jika counter melewati batas ratusan (999)
+    if next_counter > 999:
+        return None
+        
+    return f"EMP{str(next_counter).zfill(3)}"
+
 # Validator
-# Tidak boleh input id yang sudah exist
+# Tidak boleh input id yang sudah exist (looping check satu satu isi list)
 # Tidak boleh input department yang tidak exist
 
 # Upcoming
@@ -89,34 +99,39 @@ def search_employee_by_id(existing_id):
 # /===== Feature Program =====/
 # Create your feature program here
 def add_data():
-    print('\n== ADD EMPLOYEE DATA ==')
-    employee_id = input('Employee ID: ')
+    employee_id = generate_emp_id()
+    if employee_id is None:
+        print("[X] Gagal menambahkan data! Limit ID tercapai (Maksimal EMP999).")
+        return
+    print(f"Generated Employee ID: {employee_id}")
     employee_name = input('Employee Name: ')
     department = input('Department: ')
     position = input('Position: ')
     salary = float(input('Salary: '))
     years_employed = float(input('Years Employed: '))
-    employment_status = input('Employment Status: ')
     age = int(input('Age: '))
     gender = input('Gender: ')
 
-    if not employee_id or not employee_name or not department or not position or not salary or not years_employed or not employment_status or not age or not gender:
+# Gunakan fungsi all() atau bikin fungsi cek empty field
+    if not employee_id or not employee_name or not department or not position or not salary or not years_employed or not age or not gender:
          print('[X] Input tidak boleh kosong!')
          return
-
+# Kasih opsi department
     new_employee ={
-        'Employee ID': employee_id,
-        'Employee Name': employee_name,
-        'Department': department,
-        'Position': position,
-        'Salary': salary,
-        'Years Employed': years_employed,
-        'Employment Status': employment_status,
-        'Age': age,
-        'Gender': gender
+       'employee_id': employee_id,
+        'employee_name': employee_name,
+        'department': department,
+        'position': position,
+        'salary': salary,
+        'years_employed': years_employed,
+        'employment_status': 'Active',  # Automatically default new hires to Active
+        'age': age,
+        'gender': gender
     }
-    data.append(new_employee)
-    print(f"\n[V] Employee '{employee_name}' has successfully been added with the ID: {employee_id}!")
+    confirmation = input(f" Are you sure you want to add the data of '{employee_name}'? (y/n): ").strip().lower()
+    if confirmation == 'y':
+        data.append(new_employee) # tambah opsi jadi simpan atau tidak
+        print(f"\n[V] Employee '{employee_name}' has successfully been added with the ID: {employee_id}!")
 
 
 def view_data():
@@ -138,7 +153,7 @@ def update_data():
         return
         
     id_input = input('Input the employee id that wants to be updated:').strip()
-    employee = search_employee_by_id(int(id_input))
+    employee = search_employee_by_id(id_input)
     if not employee:
         print('[X] Employee ID is not found !')
         return
@@ -153,10 +168,36 @@ def update_data():
     print(f'Age : {data['age']}')
     print(f'Gender : {data['gender']}')
 
-def delete():
-    """Function for delete the data
-    """
-    return
+def delete_data():
+     print("\n== DELETE EMPLOYEE DATA ==")
+     if not data:
+        print("[!] The data to be deleted is not found!")
+        return
+     id_input = input("Input the employee id that wants to be deleted:: ").strip()
+     if not id_input.isdigit():
+            print("[X] ID harus berupa angka!")
+            return
+     employee = search_employee_by_id(id_input)
+     if not data:
+            print("[X] ID Buku tidak ditemukan!")
+            return
+     print("\n=== EMPLOYEE DATA TO BE DELETED ===")
+     print(f'Employee ID : {data['employee_id']}')
+     print(f'Employee Name : {data['employee_name']}')
+     print(f'Department : {data['department']}')
+     print(f'Position : {data['position']}')
+     print(f'Salary : {data['salary']}')
+     print(f'Years Employed : {data['years_employed']}')
+     print(f'Employment Status : {data['employment_status']}')
+     print(f'Age : {data['age']}')
+     print(f'Gender : {data['gender']}')
+
+     confirmation = input("\n[!] Are you sure you want to delete this employee data? (y/n): ").strip().lower()
+     if confirmation == 'y':
+        data.remove(employee)
+        print("[V] Employee data has been successfully deleted!")
+     else: 
+        print("[!] Deletion of employee data is cancelled.")
 
 # /===== Main Program =====/
 # Create your main program here
