@@ -67,18 +67,36 @@ data = [
     }
 ] # Example data model
 
+# Additional Features
+
+# Validator
+# Tidak boleh input id yang sudah exist
+# Tidak boleh input department yang tidak exist
+
+# Upcoming
+# display gaji pake koma
+# 
+
+# Search Employee
+def search_employee_by_id(existing_id):
+    for employee in data:
+        if employee['employee_id'] == existing_id:
+            return data
+    return None
+
+#CRUD Program
 
 # /===== Feature Program =====/
 # Create your feature program here
 def add_data():
     print('\n== ADD EMPLOYEE DATA ==')
-    employee_id = int(input('Employee ID: '))
+    employee_id = input('Employee ID: ')
     employee_name = input('Employee Name: ')
     department = input('Department: ')
     position = input('Position: ')
     salary = float(input('Salary: '))
     years_employed = float(input('Years Employed: '))
-    employment_status = input('Employment Status')
+    employment_status = input('Employment Status: ')
     age = int(input('Age: '))
     gender = input('Gender: ')
 
@@ -98,7 +116,7 @@ def add_data():
         'Gender': gender
     }
     data.append(new_employee)
-    print(f"\n[V] Employee '{employee_name}' has successfully been added with the ID: {new_employee['employee_id']}!")
+    print(f"\n[V] Employee '{employee_name}' has successfully been added with the ID: {employee_id}!")
 
 
 def view_data():
@@ -106,16 +124,34 @@ def view_data():
     if not data:
         print
         return
-
-    print(f"{'Employee ID':<5} |  {'Name':<30}  |  {'Department':<20}  |  {'Position':<20}  |  {'Salary':<20}  |  {'Years Employed':<20}  |  {'Employment Status':<20}  |  {'Age':<20}  |  {'Gender':<20}")
-    print('-'*70)
+    print('='*170)
+    print(f"{'Employee ID':<15} |  {'Name':<15}  |  {'Department':<15}  |  {'Position':<25}  |  {'Salary':<15}  |  {'Years Employed':<15}  |  {'Employment Status':<20}  |  {'Age':<5}  |  {'Gender':<5}")
+    print('='*170)
     for employee in data:
-        print(f"{employee['employee_id']:<5} |  {employee['employee_name']:<30}  |  {employee['department']:<20}  |  {employee['position']:<20}  |  {employee['salary']:<20}  |  {employee['years_employed']:<20}  |  {employee['employment_status']:<20}  |  {employee['age']:<20}  |  {employee['gender']:<20}")
+        print(f"{employee['employee_id']:<15} |  {employee['employee_name']:<15}  |  {employee['department']:<15}  |  {employee['position']:<25}  |  {employee['salary']:<15}  |  {employee['years_employed']:<15}  |  {employee['employment_status']:<20}  |  {employee['age']:<5}  |  {employee['gender']:<5}")
+    print('-'*170)
 
-def update():
-    """Function for update the data
-    """
-    return
+def update_data():
+    print('\n==UPDATE EMPLOYEE DATA==')
+    if not data:
+        print('[!] There is no data to update')
+        return
+        
+    id_input = input('Input the employee id that wants to be updated:').strip()
+    employee = search_employee_by_id(int(id_input))
+    if not employee:
+        print('[X] Employee ID is not found !')
+        return
+    print('\n== Existing Data =='.upper())
+    print(f'Employee ID : {data['employee_id']}')
+    print(f'Employee Name : {data['employee_name']}')
+    print(f'Department : {data['department']}')
+    print(f'Position : {data['position']}')
+    print(f'Salary : {data['salary']}')
+    print(f'Years Employed : {data['years_employed']}')
+    print(f'Employment Status : {data['employment_status']}')
+    print(f'Age : {data['age']}')
+    print(f'Gender : {data['gender']}')
 
 def delete():
     """Function for delete the data
