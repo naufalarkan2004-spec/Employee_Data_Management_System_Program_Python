@@ -1,17 +1,32 @@
 # ===================================
-# [Your Program Title]
+# Employee Data Management Sytem
 # ===================================
-# Developed by. Bayu Prasetya
-# JCDS - [Class Batch]
+# Developed by. Naufal Arkan Muhana
+# JCDS - 34
 
 
 # /************************************/
 
 # /===== Data Model =====/
 # Create your data model here
+
+## /===== Configuration Lists =====/
+DEPARTMENTS = {
+    "1": {"name": "Finance", "prefix": "FIN"},
+    "2": {"name": "Marketing", "prefix": "MKT"},
+    "3": {"name": "IT", "prefix": "IT"},
+    "4": {"name": "Human Resources", "prefix": "HRM"},
+    "5": {"name": "Operations", "prefix": "OPS"}
+}
+
+GENDERS = {
+    "1": "Male",
+    "2": "Female",
+}
+
 data = [
     {
-        "employee_id": "EMP001",
+        "employee_id": "FIN001",
         "employee_name": "Andi Pratama",
         "department": "Finance",
         "position": "Financial Analyst",
@@ -22,7 +37,7 @@ data = [
         "gender": "Male"
     },
     {
-        "employee_id": "EMP002",
+        "employee_id": "MKT002",
         "employee_name": "Siti Rahma",
         "department": "Marketing",
         "position": "Marketing Specialist",
@@ -33,7 +48,7 @@ data = [
         "gender": "Female"
     },
     {
-        "employee_id": "EMP003",
+        "employee_id": "IT003",
         "employee_name": "Budi Santoso",
         "department": "IT",
         "position": "Software Developer",
@@ -44,7 +59,7 @@ data = [
         "gender": "Male"
     },
     {
-        "employee_id": "EMP004",
+        "employee_id": "HRM004",
         "employee_name": "Nadia Putri",
         "department": "Human Resources",
         "position": "HR Officer",
@@ -55,7 +70,7 @@ data = [
         "gender": "Female"
     },
     {
-        "employee_id": "EMP005",
+        "employee_id": "OPS005",
         "employee_name": "Rizky Maulana",
         "department": "Operations",
         "position": "Operations Supervisor",
@@ -67,71 +82,176 @@ data = [
     }
 ] # Example data model
 
-# Additional Features
+## /===== Helper Functions =====/
 
-# ID Generator
-def generate_emp_id():
+# Create ID Generator
+def generate_emp_id(dept_prefix):
     next_counter = len(data) + 1
     
     # Jika counter melewati batas ratusan (999)
     if next_counter > 999:
         return None
         
-    return f"EMP{str(next_counter).zfill(3)}"
+    return f"{dept_prefix}{str(next_counter).zfill(3)}"
 
+# Create Input Validator
+def get_validated_input(prompt, val_type):
+    """Ensures input data types are handled safely without crashing."""
+    while True:
+        try:
+            val = input(prompt).strip()
+            if not val:
+                print("[X] Input cannot be empty!")
+                continue
+            return val_type(val)
+        except ValueError:
+            print(f"[X] Invalid data type format. Expected a {val_type.__name__}.")
+
+# Search Employee
+def search_employee_by_id(existing_id):
+    """Finds and returns a single employee dict matching the id, or None."""
+    for employee in data:
+        if employee['employee_id'].upper() == existing_id.upper():
+            return employee
+    return None
 # Validator
 # Tidak boleh input id yang sudah exist (looping check satu satu isi list)
 # Tidak boleh input department yang tidak exist
 
 # Upcoming
 # display gaji pake koma
-# 
 
-# Search Employee
-def search_employee_by_id(existing_id):
-    for employee in data:
-        if employee['employee_id'] == existing_id:
-            return data
-    return None
 
 #CRUD Program
 
 # /===== Feature Program =====/
 # Create your feature program here
 def add_data():
-    employee_id = generate_emp_id()
+    print("\n== ADD EMPLOYEE DATA ==")
+    
+    # 1. Department Selection (Determines ID Prefix)
+    print("\nSelect Department:")
+    for key, dept_info in DEPARTMENTS.items():
+        print(f"[{key}] {dept_info['name']}")
+    dept_choice = input("Insert choice (number): ").strip()
+    while dept_choice not in DEPARTMENTS:
+        dept_choice = input("[X] Invalid choice. Select a valid number from the list: ").strip()
+    selected_dept = DEPARTMENTS[dept_choice]["name"]
+    dept_prefix = DEPARTMENTS[dept_choice]["prefix"]
+    # 2. ID Generation
+    employee_id = generate_emp_id(dept_prefix)
     if employee_id is None:
-        print("[X] Gagal menambahkan data! Limit ID tercapai (Maksimal EMP999).")
+        print("[X] Gagal menambahkan data! Limit ID tercapai.")
         return
     print(f"Generated Employee ID: {employee_id}")
-    employee_name = input('Employee Name: ')
-    department = input('Department: ')
-    position = input('Position: ')
-    salary = float(input('Salary: '))
-    years_employed = float(input('Years Employed: '))
-    age = int(input('Age: '))
-    gender = input('Gender: ')
+      # 3. Handle Text Data
+    employee_name = input('Employee Name: ').strip()
+    while not employee_name:
+        employee_name = input('[X] Name cannot be empty. Employee Name: ').strip()
+        
+    position = input('Position: ').strip()
+    while not position:
+        position = input('[X] Position cannot be empty. Position: ').strip()
 
-# Gunakan fungsi all() atau bikin fungsi cek empty field
-    if not employee_id or not employee_name or not department or not position or not salary or not years_employed or not age or not gender:
-         print('[X] Input tidak boleh kosong!')
-         return
-# Kasih opsi department
-    new_employee ={
-       'employee_id': employee_id,
-        'employee_name': employee_name,
-        'department': department,
-        'position': position,
-        'salary': salary,
-        'years_employed': years_employed,
-        'employment_status': 'Active',  # Automatically default new hires to Active
-        'age': age,
-        'gender': gender
-    }
-    confirmation = input(f" Are you sure you want to add the data of '{employee_name}'? (y/n): ").strip().lower()
-    if confirmation == 'y':
-        data.append(new_employee) # tambah opsi jadi simpan atau tidak
-        print(f"\n[V] Employee '{employee_name}' has successfully been added with the ID: {employee_id}!")
+    # 4. Handle Numeric Fields safely (Years Employed removed from inputs)
+    salary = get_validated_input('Salary (IDR): ', float)
+    age = get_validated_input('Age: ', int)
+
+    # 5. Gender Selection
+    print("\nSelect Gender:")
+    for key, gender_name in GENDERS.items():
+        print(f"[{key}] {gender_name}")
+        
+    gender_choice = input("Insert choice (number): ").strip()
+    while gender_choice not in GENDERS:
+        gender_choice = input("[X] Invalid choice. Select a valid number from the list: ").strip()
+
+    selected_gender = GENDERS[gender_choice]
+
+    # 6. Cofirmation and Editing Loop
+    while True:
+        print("\n" + "="*40)
+        print("         PREVIEW SUMMARY")
+        print("="*40)
+        print(f"[1] ID Prefix / Dept : {selected_dept} ({employee_id})")
+        print(f"[2] Employee Name    : {employee_name}")
+        print(f"[3] Position         : {position}")
+        print(f"[4] Salary (IDR)     : {salary:,.2f}")
+        print(f"[5] Age              : {age}")
+        print(f"[6] Gender           : {selected_gender}")
+        print("-"*40)
+        print("Fields auto-set: Status (Active), Years Employed (0.0)")
+        print("="*40)
+        
+        confirmation = input("\nIs this correct? (y) to save, (e) to edit a field, (c) to cancel entirely: ").strip().lower()
+
+        if confirmation == 'y':
+            # Create and append payload
+            new_employee = {
+                'employee_id': employee_id,
+                'employee_name': employee_name,
+                'department': selected_dept,
+                'position': position,
+                'salary': salary,
+                'years_employed': 0.0,            
+                'employment_status': 'Active', 
+                'age': age,
+                'gender': selected_gender
+            }
+            data.append(new_employee)
+            print(f"\n[V] Employee '{employee_name}' has successfully been added with ID: {employee_id}!")
+            break
+            
+        elif confirmation == 'c':
+            print("[!] Registration cancelled. Data discarded.")
+            break
+        elif confirmation == 'e':
+            # Sub-menu to pick what field to edit
+            edit_choice = input("Enter the field number you want to correct (1-6): ").strip()
+            
+            if edit_choice == "1":
+                print("\nChange Department:")
+                for key, dept_info in DEPARTMENTS.items():
+                    print(f"[{key}] {dept_info['name']}")
+                dept_choice = input("Insert choice (number): ").strip()
+                while dept_choice not in DEPARTMENTS:
+                    dept_choice = input("[X] Invalid choice. Select a valid number: ").strip()
+                
+                selected_dept = DEPARTMENTS[dept_choice]["name"]
+                dept_prefix = DEPARTMENTS[dept_choice]["prefix"]
+                employee_id = generate_emp_id(dept_prefix) # Regenerate correct prefix ID
+                print(f"New ID Generated: {employee_id}")
+        elif edit_choice == "2":
+                employee_name = input('Enter new Employee Name: ').strip()
+                while not employee_name:
+                    employee_name = input('[X] Name cannot be empty: ').strip()
+
+        elif edit_choice == "3":
+                position = input('Enter new Position: ').strip()
+                while not position:
+                    position = input('[X] Position cannot be empty: ').strip()
+
+        elif edit_choice == "4":
+                salary = get_validated_input('Enter new Salary (IDR): ', float)
+
+        elif edit_choice == "5":
+                age = get_validated_input('Enter new Age: ', int)
+
+        elif edit_choice == "6":
+                print("\nChange Gender:")
+                for key, gender_name in GENDERS.items():
+                    print(f"[{key}] {gender_name}")
+                gender_choice = input("Insert choice (number): ").strip()
+                while gender_choice not in GENDERS:
+                    gender_choice = input("[X] Invalid choice. Select a valid number: ").strip()
+                selected_gender = GENDERS[gender_choice]
+        else:
+                print("[X] Invalid field number choice!")
+                
+    else:
+            print("[X] Invalid option. Please press 'y', 'e', or 'c'.")
+    
+
 
 
 def view_data():
@@ -174,13 +294,10 @@ def delete_data():
         print("[!] The data to be deleted is not found!")
         return
      id_input = input("Input the employee id that wants to be deleted:: ").strip()
-     if not id_input.isdigit():
-            print("[X] ID harus berupa angka!")
-            return
-     employee = search_employee_by_id(id_input)
      if not data:
-            print("[X] ID Buku tidak ditemukan!")
-            return
+                 print("[X] ID is not found!")
+                 return
+     
      print("\n=== EMPLOYEE DATA TO BE DELETED ===")
      print(f'Employee ID : {data['employee_id']}')
      print(f'Employee Name : {data['employee_name']}')
@@ -194,7 +311,7 @@ def delete_data():
 
      confirmation = input("\n[!] Are you sure you want to delete this employee data? (y/n): ").strip().lower()
      if confirmation == 'y':
-        data.remove(employee)
+        data.remove(data)
         print("[V] Employee data has been successfully deleted!")
      else: 
         print("[!] Deletion of employee data is cancelled.")
