@@ -1,80 +1,108 @@
-# Python CRUD Application for [Business Domain]
+## Python CRUD Application for Inventory Management
 
-A comprehensive Python application for managing [Data Entity] data with Create, Read, Update, and Delete (CRUD) operations.
+A console-based Python application for managing employee records with full Create, Read, Update, and Delete (CRUD) operations, plus a soft-delete Recycle Bin and built-in statistics reporting.
 
 ## Business Understanding
 
-This project caters to the [Industry/Business Domain] industry, specifically addressing the need to manage [Data Entity] data efficiently. [Data Entity] plays a crucial role in [Explain the importance of data entity in business processes].
+This project caters to the Human Resources domain, specifically addressing the need to manage Employee data efficiently. Employee records play a crucial role in HR operations — tracking who works where, their compensation, banking details for payroll, and their employment status over time. Keeping this data centralized, validated, and easy to search reduces manual errors and speeds up everyday HR tasks like onboarding, payroll updates, and reporting.
 
 **Benefits:**
 
-* Improved data accuracy and consistency
-* Streamlined data management processes
-* Enhanced decision-making through readily available data
-* ... (List additional benefits relevant to the business)
+- Improved data accuracy through built-in input validation (dates, emails, phone numbers, unique IDs)
+- Streamlined onboarding via auto-generated, department-prefixed Employee IDs
+- Enhanced decision-making through an on-demand statistics dashboard (headcount, payroll, tenure)
+- Safer deletions thanks to a Recycle Bin, avoiding accidental permanent data loss
+- Full traceability of edits through an update history log
 
 **Target Users:**
 
-This application is designed for [Target Users] (e.g., sales representatives, inventory managers, customer support agents) within the organization to facilitate their [Tasks/Activities] related to [Data Entity].
+This application is designed for HR staff and administrators within an organization to facilitate their day-to-day tasks of registering new hires, looking up and updating employee information, processing terminations/offboarding, and generating quick workforce reports.
 
 ## Features
 
-* **Create:**
-    * Add new [Data Entity] entries with essential details like [List relevant fields].
-    * Implement validation rules to ensure data integrity (if applicable, e.g., unique identifiers, data type checks).
-* **Read:**
-    * Search and retrieve specific [Data Entity] records by applying filters based on [Searchable fields].
-    * Display comprehensive information for each [Data Entity] in a user-friendly format.
-    * Integrate pagination and sorting capabilities for large datasets (if applicable).
-* **Update:**
-    * Modify existing [Data Entity] data to reflect changes in [Attributes/Properties].
-    * Provide clear confirmation or error messages based on update success or failure.
-* **Delete:**
-    * Allow for the removal of unwanted [Data Entity] records with appropriate authorization checks (if applicable).
-    * Implement soft delete functionality to prevent permanent data loss (optional, depending on business needs).
-    * Consider offering data archiving capabilities (optional).
-* **Security:**
-    * Implement user authentication and authorization mechanisms (if sensitive data is involved) to control access to different CRUD operations.
-    * ... (Specify additional security features as needed)
-* **Reporting:**
-    * Generate reports or summaries based on [Data Entity] data to support [Business Functions] (optional).
-    * Export data in various formats (e.g., CSV, Excel) for further analysis (optional).
+- **Create:**
+  - Add new employee records by selecting a department (Finance, Marketing, IT, Human Resources, Operations) and entering personal, contact, employment, and banking details.
+  - Employee IDs are auto-generated from the department prefix (e.g., FIN001, IT004), incrementing per department.
+  - Built-in validation: non-empty fields, valid date format (YYYY-MM-DD), valid email format, digits-only phone/bank account numbers, positive numeric salary, and duplicate-checking on National ID.
+  - Preview-and-confirm flow before saving — lets the user review, edit any field, or cancel before the record is written.
+- **Read:**
+  - View all employees in a summary table, with optional sorting by Hire Date or Salary (ascending/descending).
+  - Search for a specific employee by Employee ID or by Employee Name (partial match), showing a full detailed profile.
+  - Filter and list employees by department.
+- **Update:**
+  - Modify an existing employee's editable fields (name, gender, nationality, birth date, phone, email, position, employment status, bank name/account, salary).
+  - Employee ID, National ID, Department, and Hire Date are locked and cannot be changed.
+  - Every change is confirmed before being written and logged with the old and new values.
+  - View a full history log of every modification made across all employees.
+- **Delete:**
+  - Remove a single employee record, or batch-delete multiple records at once by ID.
+  - Implements soft delete: deleted records move to a Recycle Bin rather than being permanently erased.
+  - Recycle Bin supports viewing trashed records and restoring them (individually or in batch) back to the active database.
+- **Security:**
+  - Destructive actions (delete, permanent field updates) require explicit y/n confirmation before executing.
+  - Recycle Bin supports viewing trashed records and restoring them (individually or in batch) back to the active database.
+  - National ID uniqueness is enforced across both active and recycled records to prevent duplicate registrations.
+- **Reporting:**
+  - A dedicated Statistics view reports: total active/recycled employee counts, headcount and average salary per department, headcount by gender, headcount by employment status, salary overview (total payroll, average, highest, lowest paid), and tenure highlights (longest-tenured and most recently hired employees).
 
 ## Installation
 
 1. **Prerequisites:**
-    * Python version (specify the required version)
-    * Additional dependencies (list any required packages)
+   _ Python version 3.7 or later
+   _ Python 3.7 or later
+   No external dependencies — the project only uses Python's standard library (datetime)
 
 2. **Installation:**
-    ```bash
-    git clone https://github.com/<your-username>/<your-repo-name>.git
-    cd <your-repo-name>
-    pip install -r requirements.txt  # If using a requirements.txt file
-    ```
 
-3. **Database Setup (if applicable):**
-    Follow specific instructions for configuring your database connection, aligning with the business's chosen database management system.
+   ```bash
+   git clone [https://github.com/](https://github.com/)naufalarkan2004-spec/Employee_Data_Management_System_Program_Python.git
+   cd Employee_Data_Management_System_Program_Python
+   pip install -r requirements.txt
+   ```
+
+3. **Database Setup:**
+   - Database Setup: Not applicable. This project stores data in-memory using Python lists/dictionaries (data, recycle_bin, updated_history_log). All records reset when the program exits — there is no persistent storage or external database connection required.
 
 ## Usage
 
 1. **Run the application:**
-    ```bash
-    python main.py
-    ```
 
-2. **CRUD Operations:**
-    * **Create:** Add a new [Data Entity] record, for example, a new customer in a customer management system, providing details like name, contact information, and preferences.
-    * **Read:** Search and retrieve customer information by name, ID, or other relevant criteria.
-    * **Update:** Modify customer details, such as updating their address or contact details.
-    * **Delete:** Remove a customer record from the system (with appropriate authorization, if applicable).
+   ```bash
+   python main.py
+   ```
+
+2. **Main Menu Options:**
+   - **1. Add Employee Data:**
+   - **2. View Employee Data:**
+   - **3. Update Employee Data:**
+   - **4. Delete Employee Data:**
+   - **5. View Employee Statistics:**
+   - **6. Exit:**
+
+3. **CRUD Operations (example workflow):**
+   - Create: Select "Add Employee Data," choose a department, and fill in the requested fields (National ID, name, gender, nationality, birth date, phone, email, position, hire date, bank name, bank account, salary). Review the summary and confirm to save.
+   - Read: Select "View Employee Data" to list all employees (optionally sorted), search for one by ID or name, or filter the list by department.
+   - Update: Select "Update Employee Data," pick an employee by ID, choose the field to change, enter the new value, and confirm to save. Past edits can be reviewed under "View History of Modified Profiles."
+   - Delete: Select "Delete Employee Data" to remove one or several employees by ID (moved to the Recycle Bin), or open the Recycle Bin to view/restore previously deleted records.
 
 ## Data Model
-This project utilizes a [Data Structure] (e.g., relational database, JSON documents) to represent [Data Entity] data. The following fields are typically stored:
-   * [Field 1]: (Data type) - Description of the field's purpose in the business context.
-   * [Field 2]: (Data type) - Description of the field's purpose in the business context.
-   * ... (List all relevant fields)
 
-## Contributing
-We welcome contributions to this project! Please feel free to open a pull request, sent to [your_email] or submit an issue if you encounter any problems or have suggestions for improvements.
+This project uses an in-memory list of dictionaries (data) to represent employee records, with a mirrored structure used for recycle_bin entries. Each employee record contains the following fields:
 
+- **Products:**
+  - Field | Type | Description
+  - `employee_id`, (string): Auto-generated unique ID, department-prefixed (e.g., FIN001).
+  - `national_id`, (string): National ID / passport number; enforced unique across active + recycled records
+  - `employee_name`, (string): Full name of the employee
+  - `gender`, (string): Male or Female
+  - `nationality`, (string): Employee's nationality
+  - `birth_date`, (string): (YYYY-MM-DD) Date of birth
+  - `phone_number`, (string): (digits) Contact phone number, minimum 10 digits
+  - `email`, (string): Work email address
+  - `department`, (string): One of: Finance, Marketing, IT, Human Resources, Operations
+  - `position`, (string): Job title / role
+  - `employment_status`, (string): Active, On Leave, Suspended, or Terminated
+  - `hire_date`, (string (YYYY-MM-DD)): Date the employee was hired
+  - `bank_name`, (string): One of: BCA, Mandiri, BNI, BRI
+  - `bank_account`, (string (digits)): Bank account number
+  - `salary`, (integer): Monthly salary in IDR
