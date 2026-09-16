@@ -1,4 +1,4 @@
-## Python CRUD Application for Inventory Management
+## Python CRUD Application for Employee Management
 
 A console-based Python application for managing employee records with full Create, Read, Update, and Delete (CRUD) operations, plus a soft-delete Recycle Bin and built-in statistics reporting.
 
